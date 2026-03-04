@@ -1,7 +1,9 @@
 <Solution>
+  <Project Path="AlarmClock/AlarmClock.csproj" Id="fc46b097-73a3-4b71-8e84-797bcf9e6af3" />
   <Project Path="AwfulDocumentViewer/AwfulDocumentViewer.csproj" />
-  <Project Path="BoringTestOfSuperPuperDuperUsefulLibrary/BoringTestOfSuperPuperDuperUsefulLibrary.csproj" Id="939860d9-d836-4710-9900-56ad4177119e" />
-  <Project Path="SuperPuperDuperUsefulLibrary/SuperPuperDuperLibrary.csproj" Id="f68b2ce1-c1cd-4056-9198-8b5685c0884d">
+  <Project Path="BoringTestOfSuperPuperLibrary/BoringTestOfSuperPuperLibrary.csproj" Id="939860d9-d836-4710-9900-56ad4177119e" />
+  <Project Path="FunctionViewer/FunctionViewer.csproj" Id="165a8be4-db5c-4ef0-8076-c72bf852e4a1" />
+  <Project Path="SuperPuperLibrary/SuperPuperLibrary.csproj" Id="f68b2ce1-c1cd-4056-9198-8b5685c0884d">
     <BuildType Project="Release" />
   </Project>
 </Solution>

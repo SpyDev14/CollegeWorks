@@ -1,4 +1,4 @@
-using SuperPuperDuperUsefulLibrary;
+using SuperPuperLibrary;
 
 namespace BoringTestOfSuperPuperDuperUsefulLibrary;
 
@@ -30,7 +30,14 @@ public partial class MainForm : Form
 		try { 10.Div(0); }
 		catch (DivideByZeroException)
 		{
-			MessageBox.Show("10 / 0 = ОШИБКА: на 0 делить нельзя", $"Test {nameof(SuperCalculator.Div)}", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			MessageBox.Show(
+				"10 / 0 = ОШИБКА: на 0 делить нельзя",
+				$"Test {nameof(SuperCalculator.Div)}",
+				MessageBoxButtons.OK,
+				MessageBoxIcon.Error
+			);
 		}
+
+		MessageBox.Show($"Квадратный корень 15.34 = {15.35.Sqrt()}", $"Test {nameof(SuperCalculator.Sqrt)}");
 	}
 }
