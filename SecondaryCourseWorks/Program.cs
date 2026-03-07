@@ -1,11 +1,9 @@
 ﻿using System.Collections.Immutable;
 using System.Reflection;
-using System.Text;
-
 using SecondaryCourseWorks.Works;
 
-namespace SecondaryCourseWorks;
 
+namespace SecondaryCourseWorks;
 internal class Program
 {
 	static void Main(string[] args)
@@ -20,7 +18,10 @@ internal class Program
 				(work => work.Number, work => work.Execute);
 
 		Console.WriteLine("Список работ: ");
-		Console.WriteLine(string.Join('\n', workNumToExecute.Select(x => $" - {x.Key}")));
+		Console.WriteLine(string.Join('\n', workNumToExecute
+			.OrderBy(x => x.Key)
+			.Select(x => $" - {x.Key}"))
+		);
 		Console.WriteLine("\nВведите номер практической для запуска, или exit, чтобы выйти.");
 		while (true)
 		{
@@ -38,14 +39,9 @@ internal class Program
 			else
 			{
 #if DEBUG
+                execute();
 #else
-				try
-				{
-#endif
-				execute();
-#if DEBUG
-#else
-				}
+				try { execute(); }
 				catch (Exception ex)
 				{
 					Console.WriteLine(
@@ -54,7 +50,7 @@ internal class Program
 					);
 				}
 #endif
-			}
+            }
 			Console.WriteLine();
 		}
 	}

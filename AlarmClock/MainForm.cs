@@ -72,7 +72,7 @@ public partial class MainForm : Form
 		return cts;
 	}
 
-	// По итогу обычный Timer был бы идиоматичней
+	// Обычный Timer был бы идиоматичней
 	async Task UpdateLoop(CancellationToken token)
 	{
 		while (!token.IsCancellationRequested)
@@ -80,7 +80,7 @@ public partial class MainForm : Form
 			Invoke(() => {
 				machineTimeLabel.Text = DateTime.Now.ToString("HH:mm:ss");
 
-				if (!(_enabled && _alarmSoundCts == null))
+				if (!_enabled || _alarmSoundCts != null)
 					return;
 				if (!TryParseTime(targetTimeInput.Text, out int hour, out int minute))
 					return;
@@ -115,20 +115,10 @@ public partial class MainForm : Form
 
 	private void btnToggle_Click(object sender, EventArgs e)
 	{
-		if (!_enabled)
-		{
-			if (!TryParseTime(targetTimeInput.Text, out _, out _))
-			{
-				MessageBox.Show(
-					"Введите корректное время в формате ЧЧ:ММ.", "Ошибка",
-					MessageBoxButtons.OK, MessageBoxIcon.Warning
-				);
-				return;
-			}
+		targetTimeInput.Enabled = !_enabled;
+		btnToggleAlarm.Text = _enabled ? BTN_DISABLE_TEXT : BTN_ENABLE_TEXT;
 
-			_enabled = true;
-		}
-		else
+		if (_enabled)
 		{
 			_enabled = false;
 			if (_alarmSoundCts != null)
@@ -137,9 +127,18 @@ public partial class MainForm : Form
 				_alarmSoundCts.Dispose();
 				_alarmSoundCts = null;
 			}
+			return;
 		}
 
-		targetTimeInput.Enabled = !_enabled;
-		btnToggleAlarm.Text = _enabled ? BTN_DISABLE_TEXT : BTN_ENABLE_TEXT;
+		if (!TryParseTime(targetTimeInput.Text, out _, out _))
+		{
+			MessageBox.Show(
+				"Введите корректное время в формате ЧЧ:ММ.", "Ошибка",
+				MessageBoxButtons.OK, MessageBoxIcon.Warning
+			);
+			return;
+		}
+
+		_enabled = true;
 	}
 }

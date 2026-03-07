@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Collections;
+using System.Numerics;
 namespace SecondaryCourseWorks;
 
 internal static class GlobalStaticMethods
@@ -7,14 +8,9 @@ internal static class GlobalStaticMethods
 	/// Генерирует массив указанной длины со случайными значениями в заданном диапазоне.
 	/// Точность для больших чисел <b>не идеальная</b>.
 	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <param name="length"></param>
-	/// <param name="min"></param>
-	/// <param name="max"></param>
-	/// <returns>Новый заполненный <see cref="Array"/> переданного размера.</returns>
 	/// <exception cref="ArgumentOutOfRangeException"><paramref name="length"/> < 0</exception>
 	/// <exception cref="ArgumentException"><paramref name="min"/> > <paramref name="max"/></exception>
-	public static T[] GetRandomArray<T>(int length, T min, T max) where T : INumber<T>
+	public static T[] CreateRandomArray<T>(int length, T min, T max) where T : INumber<T>
 	{
 		if (length < 0) throw new ArgumentOutOfRangeException(nameof(length));
 		if (min > max) throw new ArgumentException("min must be <= max");
@@ -28,9 +24,9 @@ internal static class GlobalStaticMethods
 
 		for (int i = 0; i < length; i++)
 			array[i] = T.CreateTruncating(dMin + rnd.NextDouble() * range);
-		
+
 		return array;
 	}
 
-	public static string ToInformativeString<T>(this T[] array) => $"[{string.Join(", ", array)}]";
+	public static string ToPythonListLikeString<T>(this T[] array) => $"[{string.Join(", ", array)}]";
 }
