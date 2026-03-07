@@ -7,6 +7,7 @@
   <Project Path="MathQuiz/MathQuiz.csproj" Id="8e3aefe0-e3a6-44ef-adf6-e5d5eafad779" />
   <Project Path="PickUpPair/PickUpPair.csproj" Id="1a39a48d-3639-4820-92e4-a8c3b5595b4b" />
   <Project Path="PracticalN5/PracticalN5.csproj" Id="89fb9f7d-03fa-4810-b0d7-10f20f33e22c" />
+  <Project Path="SecondaryCourseWorks/SecondaryCourseWorks.csproj" Id="2297890a-f083-4ef7-8e79-887fc33ccb03" />
   <Project Path="SuperPuperLibrary/SuperPuperLibrary.csproj" Id="f68b2ce1-c1cd-4056-9198-8b5685c0884d">
     <BuildType Project="Release" />
   </Project>
