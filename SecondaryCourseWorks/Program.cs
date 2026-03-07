@@ -37,7 +37,15 @@ internal class Program
 				Console.WriteLine("Такой работы нет.");
 			else
 			{
-				try { execute(); }
+#if DEBUG
+#else
+				try
+				{
+#endif
+				execute();
+#if DEBUG
+#else
+				}
 				catch (Exception ex)
 				{
 					Console.WriteLine(
@@ -45,6 +53,7 @@ internal class Program
 						$"Код ошибки: {ex.HResult}"
 					);
 				}
+#endif
 			}
 			Console.WriteLine();
 		}
