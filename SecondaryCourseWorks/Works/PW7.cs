@@ -17,7 +17,17 @@ internal class PW7p1 : BasePracticalWork
 
 	public override void Execute()
 	{
-		
+		string str = Input("Введите строку");
+		var sb = new StringBuilder();
+
+		for (int i = 0; i < str.Length; i += 2)
+		{
+			if (i + 1 < str.Length)
+				sb.Append(str[i + 1]);
+			sb.Append(str[i]);
+		}
+
+		Console.WriteLine($"Out: {sb}");
 	}
 }
 

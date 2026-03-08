@@ -1,6 +1,8 @@
 ﻿using System.Collections.Immutable;
 using System.Reflection;
 using SecondaryCourseWorks.Works;
+using SecondaryCourseWorks.TextWriters;
+using SecondaryCourseWorks.GotoException;
 
 
 namespace SecondaryCourseWorks;
@@ -25,36 +27,50 @@ internal class Program
 		}";
 		Console.WriteLine(worksListStr);
 
-		Console.WriteLine("\nВведите номер практической для запуска, или exit, чтобы выйти.");
-		while (true)
+		Console.WriteLine($"\nВведите номер практической для запуска, или {Comma.EXIT}, чтобы выйти.");
+		Console.WriteLine($"Также вы можете ввести {Comma.BREAK} во время любого ввода, чтобы сразу вернуться в главный цикл.");
+		try
 		{
-			string answer = Input(validation: ((a) => works.ContainsKey(a) || a == "exit", $"Такой работы нет.\n{worksListStr}"));
-			if (answer == "exit") break;
-
-			var oldOut = Console.Out;
-			Console.SetOut(new IndentedTextWriter(oldOut, 1));
-
-			var work = works[answer];
-			if (work.Description != "")
+			while (true)
 			{
-				Console.WriteLine("Описание задания");
-				Console.WriteLine("----------------");
-				Console.WriteLine(work.Description + "\n");
-			}
-#if DEBUG
-			work.Execute();
-#else
-			try { work.Execute(); }
-			catch (Exception ex)
-			{
-				Console.WriteLine(
-					$"Выполнение завершилось с ошибкой: {ex.Message}\n" +
-					$"Код ошибки: {ex.HResult}"
+				string answer = Input(
+					validation: (works.ContainsKey, $"Такой работы нет.\n{worksListStr}"),
+					allowBreak: false // Главный цикл, тут есть exit
 				);
-			}
+
+				var oldOut = Console.Out;
+				Console.SetOut(new IndentedTextWriter(oldOut, 1));
+
+				var work = works[answer];
+				if (work.Description != "")
+				{
+					Console.WriteLine("Описание задания");
+					Console.WriteLine("----------------");
+					Console.WriteLine(work.Description + "\n");
+				}
+
+				try { work.Execute(); }
+#if DEBUG
+				catch (BreakWorkProcessing) { }
+				// Обычно использование исключений в качестве
+				// goto является плохой практикой, но это
+				// тот редкий случай, когда он действительно оправдан.
+#else
+				catch (Exception ex)
+				{
+					if (ex is not BreakWorkProcessing)
+					{
+						Console.WriteLine(
+							$"Выполнение завершилось с ошибкой: {ex.Message}\n" +
+							$"Код ошибки: {ex.HResult}"
+						);
+					}
+				}
 #endif
-			Console.SetOut(oldOut);
-			Console.WriteLine();
+				Console.SetOut(oldOut);
+				Console.WriteLine();
+			}
 		}
+		catch (ProgrammExit) { }
 	}
 }

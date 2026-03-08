@@ -1,9 +1,18 @@
 ﻿using System.Numerics;
-using System.Text;
+using SecondaryCourseWorks.GotoException;
+
 namespace SecondaryCourseWorks;
 
-internal static class GlobalStaticMethods
+// TODO: Rename to global staff or builtins
+internal static class GlobalStaticFunctions
 {
+	internal static class Comma
+	{
+		// Уже вырисовыватеся какая-то обработка комманд
+		// Но реализовывать я её, конечно же, не буду)))
+		public const string BREAK = "/break";
+		public const string EXIT = "/exit";
+	}
 	/// <summary>
 	/// Генерирует массив указанной длины со случайными значениями в заданном диапазоне.
 	/// Точность для больших чисел <b>не идеальная</b>.
@@ -59,57 +68,17 @@ internal static class GlobalStaticMethods
 		Console.WriteLine($"Width: {cols}, Height: {rows}");
 		Console.WriteLine();
 	}
-
-	// Лень выносить в отдельный файл, ранее было private
-	public class IndentedTextWriter(TextWriter original, int level) : TextWriter
-	{
-		const int LEVEL_SIZE = 4;
-
-		private int _paddingSize = level * LEVEL_SIZE;
-		private TextWriter _original = original;
-
-		public override Encoding Encoding => Encoding.UTF8;
-		public override void Write(char[]? buffer)
-		{
-			if (buffer == null)
-				return;
-
-			var sb = new StringBuilder();
-			var paddingStr = new string(' ', _paddingSize);
-
-			sb.Append(paddingStr);
-			for (int i = 0; i < buffer.Length; i++)
-			{
-				char c = buffer[i];
-
-				sb.Append(c);
-				if (c == '\n' && i < buffer.Length - 1)
-					sb.Append(paddingStr);
-			}
-
-			var newBuffer = sb.ToString().ToCharArray();
-
-			_original.Write(newBuffer);
-		}
-	}
-
 	public static string Input(
 		string? name = null,
 		(Predicate<string> validate, string msgIsInvalid)? validation = null,
-		//int nestedLevel = 0,
+		bool allowBreak = true,
+		bool goNextLineOnSuccess = true,
 		string prefix = ">>> "
 	)
 	{
-		// На память (никто не будет смотреть git log)
-
-		//var oldOut = Console.Out;
-		//if (nestedLevel != 0 && oldOut is not IndentedTextWriter)
-		//	Console.SetOut(new IndentedTextWriter(oldOut, nestedLevel));
-
 		if (name != null)
 			Console.WriteLine(name);
 
-		//try {
 		while (true)
 		{
 			Console.Write(prefix);
@@ -119,27 +88,38 @@ internal static class GlobalStaticMethods
 				Console.CursorTop -= 1;
 				continue;
 			}
+			if (answer == Comma.BREAK)
+				if (allowBreak) throw new BreakWorkProcessing();
+				else {
+					Console.WriteLine($"{Comma.BREAK} не доступен в текущем контексте.\n");
+					continue;
+				}
+			if (answer == Comma.EXIT)
+				throw new ProgrammExit();
 			if (!validation.HasValue || validation.Value.validate(answer))
 			{
-				Console.WriteLine();
+				if (goNextLineOnSuccess)
+					Console.WriteLine();
 				return answer;
 			}
 
-			Console.WriteLine(validation.Value.msgIsInvalid);
+			if (answer.StartsWith('/'))
+				Console.WriteLine($"Команды \"{answer}\" не существует.");
+			else
+				Console.WriteLine(validation.Value.msgIsInvalid);
+
 			Console.WriteLine();
 		}
-		//}
-		//finally { Console.SetOut(oldOut); }
 	}
 
 	public static T Input<T>(
 		string? name = null,
 		(Predicate<T> validate, string msgIsInvalid)? validation = null,
 		string? wrongInputMsg = null,
+		bool allowBreak = true,
 		string prefix = ">>> "
 	) where T : INumber<T>
 	{
-		// Работа с Nested также была и тут
 		if (name != null)
 			Console.WriteLine(name);
 
@@ -147,7 +127,12 @@ internal static class GlobalStaticMethods
 
 		while (true)
 		{
-			if (!T.TryParse(Input(prefix: prefix), null, out T? value))
+			string input = Input(
+				allowBreak: allowBreak,
+				goNextLineOnSuccess: false,
+				prefix: prefix
+			);
+			if (!T.TryParse(input, null, out T? value))
 			{
 				Console.WriteLine(wrongInputMsg);
 				Console.WriteLine();

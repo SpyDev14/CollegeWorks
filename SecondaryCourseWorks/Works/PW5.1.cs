@@ -3,7 +3,6 @@
 internal class PW51 : BasePracticalWork
 {
 	public override string Number => "5.1";
-
 	protected override string RawDescription => "";
 
 	public override void Execute()
