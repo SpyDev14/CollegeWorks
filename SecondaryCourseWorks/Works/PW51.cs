@@ -4,10 +4,12 @@ internal class PW51 : BasePracticalWork
 {
 	public override string Number => "5.1";
 
+	protected override string RawDescription => "";
+
 	public override void Execute()
 	{
 		var arr = CreateRandomArray(100, -5d, 5d);
-		Console.WriteLine($"Array: {arr.Select(x => $"{x:F2}").ToArray().ToPythonListLikeString()}");
+		Console.WriteLine($"Array: {arr.Select(x => $"{x:F2}").ToArray().Repr()}");
 
 		int count = 0;
 		double summ = 0;

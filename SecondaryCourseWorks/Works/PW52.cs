@@ -3,8 +3,7 @@
 internal class PW52 : BasePracticalWork
 {
 	public override string Number => "5.2";
-
-	/*
+	protected override string RawDescription => @"
 		Дан одномерный массив. Найдите разность наибольшего и наименьшего
 		чисел в этом массиве, указать их индексы. Поменять местами 2-ой и
 		7-ой элементы. 
@@ -15,15 +14,16 @@ internal class PW52 : BasePracticalWork
 
 		Задать случайным образом N элементов числового массива.
 		Вставить число 25 перед чётными элементами массива.
-	*/
+	";
+
 	public override void Execute()
 	{
 		var arr = CreateRandomArray(15, -30, 30);
-		Console.WriteLine($"In array: {arr.ToPythonListLikeString()}\nLength: {arr.Length}");
+		Console.WriteLine($"In array: {arr.Repr()}\nLength: {arr.Length}");
 		Part1(arr);
 		Part2(ref arr);
 		Part3(ref arr);
-		Console.WriteLine($"Out array: {arr.ToPythonListLikeString()}\nLength: {arr.Length}");
+		Console.WriteLine($"Out array: {arr.Repr()}\nLength: {arr.Length}");
 	}
 
 	void Part1(int[] arr)

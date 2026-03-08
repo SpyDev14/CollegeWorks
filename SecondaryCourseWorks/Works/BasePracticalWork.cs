@@ -3,7 +3,8 @@
 internal abstract class BasePracticalWork
 {
 	public abstract string Number { get; }
-	//public virtual string Name => "";
+	protected abstract string RawDescription { get; }
+	public string Description => RawDescription.Trim().Replace("\t", "");
 
 	public abstract void Execute();
 }
